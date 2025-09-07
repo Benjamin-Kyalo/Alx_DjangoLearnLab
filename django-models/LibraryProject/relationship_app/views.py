@@ -4,6 +4,7 @@ from .models import Library, Book
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import user_passes_test, permission_required  # <-- important for Task 4
+from django.contrib.auth.decorators import permission_required
 
 # ---------------------------
 # Existing Views (list_books, library detail, register)
