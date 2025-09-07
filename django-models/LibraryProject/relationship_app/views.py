@@ -3,10 +3,10 @@ from django.views.generic.detail import DetailView
 from .models import Library, Book
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.decorators import user_passes_test, permission_required
+from django.contrib.auth.decorators import user_passes_test, permission_required  # <-- important import
 
 # ---------------------------
-# Existing Views (Task 0, 1)
+# Existing Views
 # ---------------------------
 def list_books(request):
     books = Book.objects.all()
@@ -29,7 +29,7 @@ def register(request):
     return render(request, "relationship_app/register.html", {"form": form})
 
 # ---------------------------
-# Role-Based Views (Task 3)
+# Task 3: Role-Based Access Views
 # ---------------------------
 def is_admin(user):
     return hasattr(user, "userprofile") and user.userprofile.role == "Admin"
@@ -53,7 +53,7 @@ def member_view(request):
     return render(request, "relationship_app/member_view.html")
 
 # ---------------------------
-# Book Permission-Based Views (Task 4)
+# Task 4: Book Permission-Based Views
 # ---------------------------
 @permission_required('relationship_app.can_add_book', raise_exception=True)
 def add_book(request):
