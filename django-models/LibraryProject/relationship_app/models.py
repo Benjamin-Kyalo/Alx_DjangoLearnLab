@@ -8,7 +8,7 @@ from django.dispatch import receiver
 # ---------------------------
 class Library(models.Model):
     name = models.CharField(max_length=100)
-    location = models.CharField(max_length=200, null=True, blank=True)  # safe for migrations
+    location = models.CharField(max_length=200, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -16,14 +16,12 @@ class Library(models.Model):
 class Book(models.Model):
     title = models.CharField(max_length=200)
     author = models.CharField(max_length=100)
-    library = models.ForeignKey(Library, on_delete=models.CASCADE, null=True, blank=True)  # safe for existing data
+    library = models.ForeignKey(Library, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return self.title
 
-    # ---------------------------
-    # Custom Permissions (Task 4)
-    # ---------------------------
+    # Nested Meta class for custom permissions
     class Meta:
         permissions = [
             ("can_add_book", "Can add book"),
@@ -32,7 +30,7 @@ class Book(models.Model):
         ]
 
 # ---------------------------
-# UserProfile for Role-Based Access (Task 3)
+# UserProfile for Role-Based Access
 # ---------------------------
 class UserProfile(models.Model):
     ROLE_CHOICES = [

@@ -3,10 +3,10 @@ from django.views.generic.detail import DetailView
 from .models import Library, Book
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.decorators import user_passes_test, permission_required  # <-- important import
+from django.contrib.auth.decorators import user_passes_test, permission_required  # <-- important for Task 4
 
 # ---------------------------
-# Existing Views
+# Existing Views (list_books, library detail, register)
 # ---------------------------
 def list_books(request):
     books = Book.objects.all()
@@ -29,7 +29,7 @@ def register(request):
     return render(request, "relationship_app/register.html", {"form": form})
 
 # ---------------------------
-# Task 3: Role-Based Access Views
+# Task 3: Role-Based Views
 # ---------------------------
 def is_admin(user):
     return hasattr(user, "userprofile") and user.userprofile.role == "Admin"
