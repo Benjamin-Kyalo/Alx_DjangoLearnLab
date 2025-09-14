@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'bookshelf',
     'relationship_app',
     'LibraryProject',
+    'bookshelf.CustomerUser',
+    'accounts',
 
 ]
 
