@@ -41,3 +41,17 @@ In `bookshelf/views.py`, permissions are enforced with decorators:
 ## Testing
 
 1. Create test users in Dja
+
+## HTTPS and Secure Redirects
+
+### Settings configured in `settings.py`:
+
+- `SECURE_SSL_REDIRECT = True` → all HTTP requests redirect to HTTPS
+- `SECURE_HSTS_SECONDS = 31536000` → enforce HTTPS for one year
+- `SECURE_HSTS_INCLUDE_SUBDOMAINS = True` → include subdomains
+- `SECURE_HSTS_PRELOAD = True` → allow preload in browsers
+- `SESSION_COOKIE_SECURE = True` → session cookies only over HTTPS
+- `CSRF_COOKIE_SECURE = True` → CSRF cookies only over HTTPS
+- `X_FRAME_OPTIONS = "DENY"` → prevent clickjacking
+- `SECURE_CONTENT_TYPE_NOSNIFF = True` → stop MIME sniffing
+- `SECURE_BROWSER_XSS_FILTER = True` → enable browser XSS filter

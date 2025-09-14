@@ -158,3 +158,21 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Tell Django to use our custom user model instead of the default
 AUTH_USER_MODEL = "accounts.CustomUser"
+
+
+# ✅ Force HTTPS
+SECURE_SSL_REDIRECT = True  # redirect all HTTP to HTTPS
+
+# ✅ HTTP Strict Transport Security (HSTS)
+SECURE_HSTS_SECONDS = 31536000  # one year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
+# ✅ Secure cookies (already set earlier, but repeat for clarity)
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+# ✅ Extra security headers
+X_FRAME_OPTIONS = "DENY"                 # prevent clickjacking
+SECURE_CONTENT_TYPE_NOSNIFF = True       # stop MIME sniffing
+SECURE_BROWSER_XSS_FILTER = True         # enable browser XSS filter
