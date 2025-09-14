@@ -160,6 +160,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = "accounts.CustomUser"
 
 
+# ✅ Tell Django to trust the proxy header for HTTPS
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
 # ✅ Force HTTPS
 SECURE_SSL_REDIRECT = True  # redirect all HTTP to HTTPS
 
