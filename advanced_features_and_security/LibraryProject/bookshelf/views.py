@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import permission_required
+from django.shortcuts import render, get_object_or_404
 from .models import Book
 
 
@@ -22,3 +23,18 @@ def add_book(request):
 def edit_book(request, book_id):
     # just a placeholder view
     return render(request, "bookshelf/form_example.html")
+
+
+
+# Safe view — no raw SQL
+def book_list(request):
+    # ✅ Using Django ORM prevents SQL injection
+    books = Book.objects.all()
+    return render(request, "bookshelf/book_list.html", {"books": books})
+
+
+def search_books(request):
+    query = request.GET.get("q", "")
+    # ✅ ORM with filter, not raw query
+    books = Book.objects.filter(title__icontains=query)
+    return render(request, "bookshelf/book_list.html", {"books": books})

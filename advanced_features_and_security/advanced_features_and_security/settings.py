@@ -23,7 +23,24 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-kf%sx0+b-prnrenji7q8zjq3wg5wrl&o=$-_&@0khv86tjygb*'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+
+# ✅ SECURITY SETTINGS (important for production)
+
+DEBUG = False  # never True in production
+
+# Prevent browsers from XSS attacks
+SECURE_BROWSER_XSS_FILTER = True  
+
+# Prevent content type sniffing
+SECURE_CONTENT_TYPE_NOSNIFF = True  
+
+# Stop site from being framed (clickjacking protection)
+X_FRAME_OPTIONS = "DENY"  
+
+# Ensure cookies only sent over HTTPS
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+
 
 ALLOWED_HOSTS = []
 
@@ -40,6 +57,7 @@ INSTALLED_APPS = [
     'LibraryProject',
     # 'bookshelf',
     'accounts',
+    'csp',
 ]
 
 MIDDLEWARE = [
@@ -50,7 +68,17 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'csp.middleware.CSPMiddleware',  # Content Security Policy middleware
 ]
+# ---------------------------------------
+# CSP CONFIGURATION
+# ---------------------------------------
+
+# ✅ Restrict what sources can load content
+CSP_DEFAULT_SRC = ("'self'",)   # only load from same origin
+CSP_STYLE_SRC = ("'self'", "https://fonts.googleapis.com")  # allow Google Fonts
+CSP_SCRIPT_SRC = ("'self'",)    # only scripts from same origin
+
 
 ROOT_URLCONF = 'advanced_features_and_security.urls'
 
