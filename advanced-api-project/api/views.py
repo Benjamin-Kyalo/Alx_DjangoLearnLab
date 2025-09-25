@@ -1,7 +1,8 @@
 # api/views.py
 
-from rest_framework import generics
+from rest_framework import generics, filters  # ✅ added filters
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from django_filters import rest_framework as django_filters  # ✅ required for filtering
 from .models import Book, Author
 from .serializers import BookSerializer, AuthorSerializer
 
@@ -59,12 +60,22 @@ class AuthorDeleteView(generics.DestroyAPIView):
 
 
 # -------------------------------
-# BOOK VIEWS (your existing code remains unchanged)
+# BOOK VIEWS
 # -------------------------------
 class BookListView(generics.ListAPIView):
+    """
+    View to list ALL books in the system.
+    Supports filtering, searching, and ordering.
+    """
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+
+    # ✅ filtering, searching, ordering (Task 2)
+    filter_backends = [django_filters.DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ["title", "author", "publication_year"]
+    search_fields = ["title", "author__name"]
+    ordering_fields = ["title", "publication_year"]
 
 
 class BookDetailView(generics.RetrieveAPIView):
