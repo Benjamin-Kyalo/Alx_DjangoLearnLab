@@ -1,8 +1,9 @@
 # api/views.py
 
 from rest_framework import generics
-from .models import Book
-from .serializers import BookSerializer
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated  # ✅ add this
+from .models import Book, Author
+from .serializers import BookSerializer, AuthorSerializer
 
 # -------------------------------
 # LIST VIEW
@@ -14,6 +15,7 @@ class BookListView(generics.ListAPIView):
     """
     queryset = Book.objects.all()
     serializer_class = BookSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]  # ✅ only authenticated users can modify data
 
 
 # -------------------------------
@@ -26,6 +28,7 @@ class BookDetailView(generics.RetrieveAPIView):
     """
     queryset = Book.objects.all()
     serializer_class = BookSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]  # ✅ only authenticated users can modify data
 
 
 # -------------------------------
@@ -38,6 +41,7 @@ class BookCreateView(generics.CreateAPIView):
     """
     queryset = Book.objects.all()
     serializer_class = BookSerializer
+    permission_classes = [IsAuthenticated]  # ✅ only authenticated users can create data
 
 
 # -------------------------------
@@ -50,6 +54,7 @@ class BookUpdateView(generics.UpdateAPIView):
     """
     queryset = Book.objects.all()
     serializer_class = BookSerializer
+    permission_classes = [IsAuthenticated]  # ✅ only authenticated users can update data
 
 
 # -------------------------------
@@ -62,3 +67,4 @@ class BookDeleteView(generics.DestroyAPIView):
     """
     queryset = Book.objects.all()
     serializer_class = BookSerializer
+    permission_classes = [IsAuthenticated]  # ✅ only authenticated users can delete data

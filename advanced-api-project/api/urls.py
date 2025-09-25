@@ -8,6 +8,7 @@ from .views import (
     BookUpdateView,
     BookDeleteView,
 )
+from . import views
 
 urlpatterns = [
     path("books/", BookListView.as_view(), name="book-list"),
