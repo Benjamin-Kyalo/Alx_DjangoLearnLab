@@ -15,7 +15,8 @@ from django.shortcuts import get_object_or_404
 from .models import Comment
 from .forms import CommentForm
 
-
+from .models import Profile
+from .forms import ProfileUpdateForm
 
 def home(request):
     # Simple home page that loads the base template
@@ -133,3 +134,15 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         comment = self.get_object()
         return self.request.user == comment.author
+    
+class ProfileDetailView(LoginRequiredMixin, DetailView):
+    model = Profile
+    template_name = "blog/profile_detail.html"
+
+class ProfileUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Profile
+    form_class = ProfileUpdateForm
+    template_name = "blog/profile_form.html"
+
+    def test_func(self):
+        return self.request.user == self.get_object().user
