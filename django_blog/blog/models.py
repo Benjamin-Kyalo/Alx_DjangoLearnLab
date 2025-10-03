@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+from taggit.managers import TaggableManager
 
 class Post(models.Model):
     # Title of the blog post
@@ -18,6 +19,7 @@ class Post(models.Model):
     
     # Link each post to a user (author). If user is deleted, delete their posts too.
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
+    tags = TaggableManager()
 
     def __str__(self):
         # This makes the post title show up nicely in the admin panel

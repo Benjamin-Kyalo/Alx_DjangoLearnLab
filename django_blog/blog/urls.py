@@ -1,6 +1,9 @@
 from django.urls import path
 from . import views
 
+from .views import PostSearchView
+
+
 urlpatterns = [
     path("", views.home, name="home"),
     path("register/", views.register, name="register"),
@@ -24,6 +27,9 @@ urlpatterns = [
     
     path("profile/<int:pk>/", views.ProfileDetailView.as_view(), name="profile-detail"),
     path("profile/<int:pk>/edit/", views.ProfileUpdateView.as_view(), name="profile-update"),
+    
+    path("search/", PostSearchView.as_view(), name="post-search"),
+
 
 
 ]
