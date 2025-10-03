@@ -6,6 +6,7 @@ from .models import Post
 from .models import Comment
 
 from .models import Profile
+from taggit.forms import TagWidget
 
 class RegisterForm(UserCreationForm):
     email = forms.EmailField(required=True)
@@ -18,6 +19,9 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ["title", "content", "tags"]
+        widgets = {
+            "tags": TagWidget(),
+        }
         
 
 class CommentForm(forms.ModelForm):
