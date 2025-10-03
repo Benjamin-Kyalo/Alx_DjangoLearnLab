@@ -1,6 +1,7 @@
 # blog/models.py
 from django.db import models
-from django.contrib.auth.models import User  # built-in User model for authors
+from django.contrib.auth.models import User
+from django.urls import reverse
 
 class Post(models.Model):
     # Title of the blog post
@@ -18,3 +19,7 @@ class Post(models.Model):
     def __str__(self):
         # This makes the post title show up nicely in the admin panel
         return self.title
+    def get_absolute_url(self):
+        
+        # Redirects to the detail page of this post after save
+        return reverse("post-detail", kwargs={"pk": self.pk})
