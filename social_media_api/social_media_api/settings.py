@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     
     # local apps
     'accounts',
+    'posts',
     
 ]
 
@@ -146,3 +147,7 @@ REST_FRAMEWORK = {
 
 # Custom user model
 AUTH_USER_MODEL = 'accounts.CustomUser'
+
+# Pagination
+REST_FRAMEWORK['DEFAULT_PAGINATION_CLASS'] = 'rest_framework.pagination.PageNumberPagination'
+REST_FRAMEWORK['PAGE_SIZE'] = 5
