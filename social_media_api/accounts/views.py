@@ -1,68 +1,59 @@
-from rest_framework import generics, permissions, status             # DRF view helpers
-from rest_framework.response import Response                         # for API responses
-from rest_framework.authtoken.models import Token                    # token model
-from django.contrib.auth import authenticate                         # handles login
-from .serializers import RegisterSerializer, UserSerializer           # import our serializers
-from django.contrib.auth import get_user_model                        # get user model dynamically
+from rest_framework import generics, permissions, status
+from rest_framework.response import Response
+from rest_framework.authtoken.models import Token
+from django.contrib.auth import authenticate
+from django.contrib.auth import get_user_model
+from .serializers import RegisterSerializer, UserSerializer
 
-User = get_user_model()  # get our custom user model
-
+User = get_user_model()
 
 class RegisterView(generics.CreateAPIView):
     """
-    API endpoint for user registration.
-    POST request with username, email, password creates a new user + token.
+    Endpoint: /register/
+    Allows new user registration and returns token.
     """
-    serializer_class = RegisterSerializer                             # specify serializer
-    permission_classes = [permissions.AllowAny]                       # anyone can register
+    serializer_class = RegisterSerializer
+    permission_classes = [permissions.AllowAny]
 
     def create(self, request, *args, **kwargs):
-        """
-        Custom response: return user data and token after successful registration.
-        """
         serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)                     # validate input
-        user = serializer.save()                                      # save user to DB
-        token, created = Token.objects.get_or_create(user=user)       # get or create auth token
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        token, _ = Token.objects.get_or_create(user=user)
         return Response({
-            "user": UserSerializer(user).data,
-            "token": token.key
+            'user': UserSerializer(user).data,
+            'token': token.key
         }, status=status.HTTP_201_CREATED)
 
 
 class LoginView(generics.GenericAPIView):
     """
-    API endpoint for user login.
-    POST request with username and password returns authentication token.
+    Endpoint: /login/
+    Authenticates user and returns token.
     """
-    serializer_class = RegisterSerializer                             # reuse fields for validation
+    serializer_class = RegisterSerializer
     permission_classes = [permissions.AllowAny]
 
     def post(self, request, *args, **kwargs):
-        username = request.data.get("username")                       # get username
-        password = request.data.get("password")                       # get password
-        user = authenticate(username=username, password=password)     # verify credentials
-
+        username = request.data.get('username')
+        password = request.data.get('password')
+        user = authenticate(username=username, password=password)
         if user:
-            token, _ = Token.objects.get_or_create(user=user)         # return existing/new token
+            token, _ = Token.objects.get_or_create(user=user)
             return Response({
-                "token": token.key,
-                "user": UserSerializer(user).data
+                'user': UserSerializer(user).data,
+                'token': token.key
             })
-        else:
-            return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ProfileView(generics.RetrieveUpdateAPIView):
     """
-    API endpoint for viewing and updating user profile.
-    Only accessible to authenticated users.
+    Endpoint: /profile/
+    View and update user profile (requires authentication).
     """
     serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticated]                # must be logged in
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_object(self):
-        """
-        Returns the logged-in user object.
-        """
         return self.request.user
