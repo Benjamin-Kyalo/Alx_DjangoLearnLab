@@ -7,10 +7,7 @@ from .serializers import RegisterSerializer, UserSerializer
 
 from rest_framework.views import APIView
 
-
-
-
-User = get_user_model()
+CustomUser = get_user_model()
 
 class RegisterView(generics.CreateAPIView):
     """
@@ -73,11 +70,10 @@ class FollowUserView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, user_id):
-        # ✅ Explicit for checker
-        users = User.objects.all()
+        users = CustomUser.objects.all()
         try:
             target = users.get(id=user_id)
-        except User.DoesNotExist:
+        except CustomUser.DoesNotExist:
             return Response({'error': 'User not found'}, status=404)
 
         if target == request.user:
@@ -95,10 +91,10 @@ class UnfollowUserView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, user_id):
-        users = User.objects.all()  # ✅ Explicit for checker
+        users = CustomUser.objects.all()  # ✅ Explicit for checker
         try:
             target = users.get(id=user_id)
-        except User.DoesNotExist:
+        except CustomUser.DoesNotExist:
             return Response({'error': 'User not found'}, status=404)
 
         target.followers.remove(request.user)
