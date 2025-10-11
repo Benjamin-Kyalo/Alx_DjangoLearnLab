@@ -1,14 +1,14 @@
-from rest_framework import viewsets, permissions, filters, status
+from rest_framework import viewsets, permissions, filters, generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import Post, Comment
+from .models import Post, Comment, Like
 from .serializers import PostSerializer, CommentSerializer
 
 # task 3
 from django.shortcuts import get_object_or_404
 from django.contrib.contenttypes.models import ContentType
 from notifications.models import Notification
-from .models import Post, Like
+# from .models import Post, Like
 
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -56,8 +56,10 @@ class LikePostView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, pk):
-        post = get_object_or_404(Post, pk=pk)
+        post = generics.get_object_or_404(Post, pk=pk)
+        # Check if the user has already liked the post
         like, created = Like.objects.get_or_create(user=request.user, post=post)
+        
         if not created:
             return Response({'message': 'Already liked'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -82,7 +84,7 @@ class UnlikePostView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, pk):
-        post = get_object_or_404(Post, pk=pk)
+        post = generics.get_object_or_404(Post, pk=pk)
         try:
             like = Like.objects.get(user=request.user, post=post)
             like.delete()
