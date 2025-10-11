@@ -10,23 +10,13 @@ import os
 import dj_database_url
 
 # ---------------- PATHS & ENV ----------------
-# Base directory of the project
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-# Load environment variables from .env file
 load_dotenv(BASE_DIR / '.env')
 
-
 # ---------------- SECURITY & DEBUG ----------------
-# Use an environment variable for secret key (fallback for local dev)
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'unsafe-local-dev-secret')
-
-# DEBUG should be False in production
 DEBUG = os.getenv('DJANGO_DEBUG', 'False').lower() in ('1', 'true', 'yes')
-
-# Allowed hosts (split by space)
 ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', 'localhost 127.0.0.1').split()
-
 
 # ---------------- APPLICATIONS ----------------
 INSTALLED_APPS = [
@@ -48,11 +38,10 @@ INSTALLED_APPS = [
     'notifications',
 ]
 
-
 # ---------------- MIDDLEWARE ----------------
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # For static files in production
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Static files in production
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -61,15 +50,13 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-
 ROOT_URLCONF = 'social_media_api.urls'
-
 
 # ---------------- TEMPLATES ----------------
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],  # You can add templates directory later if needed
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -81,32 +68,26 @@ TEMPLATES = [
     },
 ]
 
-
 WSGI_APPLICATION = 'social_media_api.wsgi.application'
 
-
 # ---------------- DATABASE ----------------
-# PostgreSQL Database Configuration
-DATABASE_URL = os.getenv('DATABASE_URL')  # Format: postgres://USER:PASSWORD@HOST:PORT/DBNAME
+DATABASE_URL = os.getenv('DATABASE_URL')
 
 if DATABASE_URL:
-    # ✅ Safely parse DATABASE_URL if it exists
     DATABASES = {
         'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600)
     }
 else:
-    # ✅ Fallback to local PostgreSQL credentials
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.getenv('POSTGRES_DB'),
-            'USER': os.getenv('POSTGRES_USER'),
-            'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
-            'HOST': os.getenv('POSTGRES_HOST'),
-            'PORT': os.getenv('POSTGRES_PORT'),
+            'NAME': os.getenv('POSTGRES_DB', 'social_media_db'),
+            'USER': os.getenv('POSTGRES_USER', 'postgres'),
+            'PASSWORD': os.getenv('POSTGRES_PASSWORD', ''),
+            'HOST': os.getenv('POSTGRES_HOST', 'localhost'),
+            'PORT': os.getenv('POSTGRES_PORT', '5432'),
         }
     }
-
 
 # ---------------- PASSWORD VALIDATORS ----------------
 AUTH_PASSWORD_VALIDATORS = [
@@ -116,40 +97,26 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-
 # ---------------- INTERNATIONALIZATION ----------------
 LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Africa/Nairobi'
 USE_I18N = True
 USE_TZ = True
 
-
 # ---------------- STATIC & MEDIA ----------------
-# Where `collectstatic` will collect static files for production
 STATIC_ROOT = os.getenv('DJANGO_STATIC_ROOT', str(BASE_DIR / 'staticfiles'))
-
-# URL path used to serve static files
 STATIC_URL = '/static/'
-
-# ✅ Ensure static folder exists to avoid W004 warning
 STATIC_DIR = BASE_DIR / 'static'
-if not STATIC_DIR.exists():
-    STATIC_DIR.mkdir()
-
+STATIC_DIR.mkdir(exist_ok=True)
 STATICFILES_DIRS = [str(STATIC_DIR)]
-
-# Use WhiteNoise for static files in production
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# Media (user uploaded files)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.getenv('DJANGO_MEDIA_ROOT', str(BASE_DIR / 'media'))
-
 
 # ---------------- DEFAULTS ----------------
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'accounts.CustomUser'
-
 
 # ---------------- REST FRAMEWORK ----------------
 REST_FRAMEWORK = {
@@ -163,7 +130,6 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 5,
 }
 
-
 # ---------------- SECURITY HEADERS ----------------
 SECURE_BROWSER_XSS_FILTER = True
 X_FRAME_OPTIONS = 'DENY'
@@ -172,9 +138,8 @@ SECURE_SSL_REDIRECT = os.getenv('DJANGO_SECURE_SSL_REDIRECT', 'True').lower() in
 SESSION_COOKIE_SECURE = os.getenv('DJANGO_SESSION_COOKIE_SECURE', 'True').lower() in ('1', 'true', 'yes')
 CSRF_COOKIE_SECURE = os.getenv('DJANGO_CSRF_COOKIE_SECURE', 'True').lower() in ('1', 'true', 'yes')
 SECURE_HSTS_SECONDS = int(os.getenv('DJANGO_SECURE_HSTS_SECONDS', '0'))
-SECURE_HSTS_INCLUDE_SUBDOMAINS = os.getenv('DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS', 'False').lower() in ('1','true','yes')
-SECURE_HSTS_PRELOAD = os.getenv('DJANGO_SECURE_HSTS_PRELOAD', 'False').lower() in ('1','true','yes')
-
+SECURE_HSTS_INCLUDE_SUBDOMAINS = os.getenv('DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS', 'False').lower() in ('1', 'true', 'yes')
+SECURE_HSTS_PRELOAD = os.getenv('DJANGO_SECURE_HSTS_PRELOAD', 'False').lower() in ('1', 'true', 'yes')
 
 # ---------------- LOGGING ----------------
 LOGGING = {
